@@ -5,14 +5,14 @@
 #include <stdio.h>
 
 /**
-* Clas used for logging.
+* Class used for logging.
 */
 class Log
 {
 public:
     Log();
     ~Log();
-    bool Create(const char *FileName);
+    bool Create(std::string FileName);
     void Write(unsigned int LogLevel, std::string Text, std::string CppFile, int CppLine);
     void SetLogBit(unsigned int LogBit);
 

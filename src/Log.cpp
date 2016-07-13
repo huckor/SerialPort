@@ -5,6 +5,7 @@
 Log::Log()
 {
     _LogBit = 0xFFFF;
+    _LogFile = NULL;
 }
 
 Log::~Log()
@@ -13,13 +14,13 @@ Log::~Log()
         fclose(_LogFile);
 }
 
-bool Log::Create(const char *FileName)
+bool Log::Create(std::string FileName)
 {
-	if( strcmp(FileName, "stderr") == 0 )
+	if(FileName.compare("stderr") == 0)
 		_LogFile = stderr;
 	else
     {
-		if((_LogFile = fopen( FileName, "at")) == NULL)
+		if((_LogFile = fopen( FileName.c_str(), "at")) == NULL)
 			return false;
 	}
     
@@ -43,9 +44,9 @@ void Log::SetLogBit(unsigned int LogBit)
 std::string Log::GetFileAndLine(std::string Path, int Line)
 {
   std::string Result;
-  unsigned long Found = Path.find_last_of("/\\");
+  size_t Found = Path.find_last_of("/\\");
 
-  if(Found != -1)
+  if(Found != std::string::npos)
   {
     Path = Path.substr(Found + 1);
     Path += ":" + Conv::IntToStr(Line);

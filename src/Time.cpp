@@ -27,12 +27,12 @@ std::string Time::GetFormatedDateTime()
   snprintf(Result, 50, "[%02i.%02i.%02i %02i:%02i:%02i]", tm_time.tm_mday, tm_time.tm_mon + 1,
       tm_time.tm_year + 1900, tm_time.tm_hour, tm_time.tm_min, tm_time.tm_sec);
 #else
-	//Structure represents a date and time
-	SYSTEMTIME SysTime;
-	//Retrieves the current system date and time
-	GetLocalTime(&SysTime);
+  //Structure represents a date and time
+  SYSTEMTIME SysTime;
+  //Retrieves the current system date and time
+  GetLocalTime(&SysTime);
 
-	_snprintf(Result, 50, "[%02i.%02i.%02i %02i:%02i:%02i]", SysTime.wDay, SysTime.wMonth, SysTime.wYear, SysTime.wHour, SysTime.wMinute, SysTime.wSecond);
+  _snprintf(Result, 50, "[%02i.%02i.%02i %02i:%02i:%02i]", SysTime.wDay, SysTime.wMonth, SysTime.wYear, SysTime.wHour, SysTime.wMinute, SysTime.wSecond);
 #endif
 
   return std::string(Result);
@@ -46,21 +46,21 @@ unsigned long Time::GetSecondsSinceEpoch()
 #ifndef WIN32
   return time(NULL);
 #else
-	SYSTEMTIME SysTime;
-    FILETIME FileTime;
-    LARGE_INTEGER LargeInteger;    
+  SYSTEMTIME SysTime;
+  FILETIME FileTime;
+  LARGE_INTEGER LargeInteger;
 
-	//Get systime
-    GetSystemTime(&SysTime);
-	//Convert systime to file time
-    SystemTimeToFileTime(&SysTime, &FileTime);
+  //Get systime
+  GetSystemTime(&SysTime);
+  //Convert systime to file time
+  SystemTimeToFileTime(&SysTime, &FileTime);
 
-	//Convert filetime to large integer (int64)
-    LargeInteger.LowPart = FileTime.dwLowDateTime;
-    LargeInteger.HighPart = FileTime.dwHighDateTime;
+  //Convert filetime to large integer (int64)
+  LargeInteger.LowPart = FileTime.dwLowDateTime;
+  LargeInteger.HighPart = FileTime.dwHighDateTime;
 
-	//Convert to seconds
-	return LargeInteger.QuadPart / 10000000;
+  //Convert to seconds
+  return (unsigned long)LargeInteger.QuadPart / 10000000;
 #endif
 }
 

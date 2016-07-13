@@ -14,5 +14,6 @@ extern Log *__LOG;
 #define LUA_INIT_FAILED         -2
 #define LUA_SET_PATH_FAILED     -3
 #define LUA_DO_FILE_FAILED      -4
+#define TIMEOUT					-5
 
 #endif /* Global_h */

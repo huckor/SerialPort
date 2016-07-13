@@ -1,7 +1,11 @@
 #include "Log.h"
 #include "Global.h"
-#include "SerialPort.h"
 #include "Conv.h"
+#ifndef WIN32
+#include "SerialPortPosix.h"
+#else
+#include "SerialPortWin.h"
+#endif
 
 Log *__LOG;
 
@@ -12,46 +16,62 @@ int main(int argc, const char * argv[])
     __LOG->Create("stderr");
     
     
-	std::vector<unsigned char> Data;
-    SerialPort _SerialPort;
+    std::vector<unsigned char> Data;
+    iSerialPort *SerialPort;
+    int Ret = -1;
+
+#ifndef WIN32
+    SerialPort = new SerialPortPosix();
+    SerialPort->SetComPortName("/dev/pts/6");
+#else
+    SerialPort = new SerialPortWin();
+    SerialPort->SetComPortName("COM1");
+#endif
 
 	//Set serial port parameters
-	_SerialPort.SetBaudRate(9600);
-	_SerialPort.SetByteSize(8);
-	_SerialPort.SetComPortName("COM1");
-	_SerialPort.SetParity(ODD_PARITY);
-	_SerialPort.SetReadTimeout(10);
+	SerialPort->SetBaudRate(9600);
+	SerialPort->SetCharacterSize(8);
+	SerialPort->SetParity(ODD_PARITY);
+	SerialPort->SetReadTimeout(10);
 	
 	//Initialize and open serial port
-	if(_SerialPort.Open())
+	if(SerialPort->Open() == OK)
 	{
-		//Read data till receive 0x03 (EOT)
+		//Read data till receive 0x31 ('1')
 		while(true)
 		{
-			Data = _SerialPort.Read(1);
-			if(Data.size() > 0)
+			Data.clear();
+			Data.push_back(0x00);
+			Ret = SerialPort->Read(&Data[0], 1);
+			if(Ret == OK)
 			{
-				if(Data[0] == 0x03)
+				if(Data[0] == 0x31)
 					break;
 				else
 				{
-					LOG("Readed: " + Conv::BinToAscii(Data, false), MAIN_LOG_BIT);
+					LOG("Read: " + Conv::BinToAscii(Data, false), MAIN_LOG_BIT);
 
 					//Write ACK
 					Data.clear();
 					Data.push_back(0x06);
-					if(_SerialPort.Write(Data))
-						LOG("ACK were written to serial port sucesfully", MAIN_LOG_BIT);
+					if(SerialPort->Write(Data))
+						LOG("ACK were written to serial port successfully", MAIN_LOG_BIT);
 					else
 						LOG("Write to serial port failed", MAIN_LOG_BIT);
 				}
 			}
 			else
-				LOG("Read timeouted", MAIN_LOG_BIT);
+				LOG("Read timeout", MAIN_LOG_BIT);
 		}
 
-		_SerialPort.Close();
+		SerialPort->Close();
 	}
+
+#ifndef WIN32
+	delete (SerialPortPosix *)SerialPort;
+#else
+	delete (SerialPortWin *)SerialPort;
+#endif
     
     
     //Delete log class !important to do it as last thing

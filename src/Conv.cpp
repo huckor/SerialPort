@@ -1,5 +1,6 @@
 #include "Conv.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 /**
 * Convert integer to string
@@ -19,7 +20,7 @@ int Conv::StrToInt(std::string Number)
 {
 	int Return = 0;
 
-	Return = strtol(Number.c_str(), NULL, 10);
+	Return = (int)strtol(Number.c_str(), NULL, 10);
 	return Return;
 }
 
@@ -31,7 +32,7 @@ int Conv::WStrToInt(std::wstring Number)
 	int Return = 0;
 	std::string Tmp = WcharToString((wchar_t *)Number.c_str());
 
-	Return = strtol(Tmp.c_str(), NULL, 10);
+	Return = (int)strtol(Tmp.c_str(), NULL, 10);
 	return Return;
 }
 
@@ -213,7 +214,7 @@ std::string Conv::WstringToString(std::wstring Text)
 	std::string Return;
 
 	for(unsigned int i = 0; i < Text.length(); i++)
-		Return += Text[i];
+		Return += (char)Text[i];
 
 	return Return;
 }
@@ -298,7 +299,7 @@ std::string Conv::WcharToString(wchar_t *WcharArray)
 	for(;;)
 	{
     if(WcharArray[i] == '\0') break;
-		Return += WcharArray[i];
+		Return += (char)WcharArray[i];
 		i++;
 	}
 	return Return;
