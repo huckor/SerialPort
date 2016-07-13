@@ -49,7 +49,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE; _CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -77,14 +77,15 @@
     <ClCompile Include="..\..\src\Conv.cpp" />
     <ClCompile Include="..\..\src\Log.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
-    <ClCompile Include="..\..\src\SerialPort.cpp" />
+    <ClCompile Include="..\..\src\SerialPortWin.cpp" />
     <ClCompile Include="..\..\src\Time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Conv.h" />
     <ClInclude Include="..\..\src\Global.h" />
+    <ClInclude Include="..\..\src\iSerialPort.h" />
     <ClInclude Include="..\..\src\Log.h" />
-    <ClInclude Include="..\..\src\SerialPort.h" />
+    <ClInclude Include="..\..\src\SerialPortWin.h" />
     <ClInclude Include="..\..\src\Time.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
